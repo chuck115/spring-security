@@ -181,6 +181,7 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 			try {
 				result = provider.authenticate(authentication);
 				if (result != null) {
+					// 试过Provider列表，成功了。
 					copyDetails(authentication, result);
 					break;
 				}
@@ -189,6 +190,7 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 				prepareException(ex, authentication);
 				// SEC-546: Avoid polling additional providers if auth failure is due to
 				// invalid account status
+				// 用户状态不对，就不用在尝试了
 				throw ex;
 			}
 			catch (AuthenticationException ex) {
@@ -216,6 +218,7 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 			if (this.eraseCredentialsAfterAuthentication && (result instanceof CredentialsContainer)) {
 				// Authentication is complete. Remove credentials and other secret data
 				// from authentication
+				// 结束了，把密码清除掉
 				((CredentialsContainer) result).eraseCredentials();
 			}
 			// If the parent AuthenticationManager was attempted and successful then it
